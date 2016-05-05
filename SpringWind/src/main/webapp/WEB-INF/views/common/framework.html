@@ -9,6 +9,7 @@
 <div id="wrapper">
    #parse("/common/nav_left.html")
    <!--右侧部分开始-->
+	<div id = "pjax-container">
    <div id="page-wrapper" class="gray-bg dashbard-1">
 	   <div class="row border-bottom">
 	   <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -36,14 +37,24 @@
 			<h3>官方QQ群：235079513 <font color="red">版权归作者所有，无授权请勿商用！</font></h3>
 			<ol class="breadcrumb">
 				<li><a href="index.html">首页</a></li>
-				#block("breadcrumb")#end
+				<li class="active"><strong>介绍说明</strong></li>
 			</ol>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="wrapper wrapper-content">
-				#block("content")#end
+				<div class="row">
+					<img alt="spring-wind" src="#springUrl('/static/img/spring-wind.png')">
+				</div>
+				<div class="row">
+					<br> <br>SSM 架构核心库，打造一个完美的 Spring，SpringMVC，MyBatis 架构生态圈。<br>
+					<br>
+				</div>
+				<div class="row">
+					<br>《春风》<br> 春风如贵客，一到便繁华。<br> 来扫千山雪，归留万国花。<br>
+					<br><br><br>
+				</div>
 			</div>
 			<div class="footer">
 				<div class="pull-right">
@@ -53,6 +64,7 @@
 		</div>
 	</div>
    </div>
+	</div>
    <!--右侧部分结束-->
 </div>
 <script src="#springUrl('/static/js/jquery-2.1.1.js')"></script>
@@ -62,7 +74,14 @@
 <script src="#springUrl('/static/js/plugins/gritter/jquery.gritter.min.js')"></script>
 <script src="#springUrl('/static/js/inspinia.js')"></script>
 <script src="#springUrl('/static/js/plugins/pace/pace.min.js')"></script>
-<script src="#springUrl('/static/js/plugins/gritter/jquery.gritter.min.js')"></script>
+<script src="#springUrl('/static/js/jquery.pjax.js')"></script>
+<script>
+	$(document).ready(function ($) {
+		$(document).pjax('a', '#pjax-container');
+	});
+
+
+</script>
 #include("/common/theme-config.html")
 #block("js")#end
 </body>
