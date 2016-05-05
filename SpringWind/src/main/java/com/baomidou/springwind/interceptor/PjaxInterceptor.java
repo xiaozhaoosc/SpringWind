@@ -17,7 +17,7 @@ public class PjaxInterceptor extends HandlerInterceptorAdapter {
                              HttpServletResponse response, Object handler) throws Exception {
         LOGGER.debug(String.format("interceptor: uri=%s", request.getRequestURI()));
         if (request.getHeader("X-PJAX") == null && !HttpUtil.isAjax(request)) {
-            response.sendRedirect("/");
+            response.sendRedirect("/index.html");
             return false;
         }
         return true;
