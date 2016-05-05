@@ -1,13 +1,3 @@
-#override("title")
-SpringWind - 权限管理
-#end
-#override("css")
-<link href="#springUrl('/static/css/plugins/bootstrap-table/bootstrap-table.min.css')" rel="stylesheet">
-#end
-#override("breadcrumb")
-<li><a>权限管理</a></li><li class="active"><strong>权限管理</strong></li>
-#end
-#override("content")
 <div class="row">
     <div class="row">
         <div class="col-sm-12">
@@ -15,16 +5,8 @@ SpringWind - 权限管理
         </div>
     </div>
 </div>
-#end
-#override("js")
-<script src="#springUrl('/static/js/plugins/bootstrap-table/bootstrap-table.min.js')"></script>
-<script src="#springUrl('/static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js')"></script>
-<script src="#springUrl('/static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js')"></script>
-<script src="#springUrl('/static/plugins/layer-v2.2/layer/layer.js')"></script>
-<script src="#springUrl('/static/js/base_list.js')"></script>
-<script src="#springUrl('/static/js/common.js')"></script>
 <script type="text/javascript">
-var dataUrl="#springUrl('/perm/permission/getPermissionList.html')";
+var dataUrl="#springUrl('/perm/permission/getPermissionList.html?pjax=true')";
 var dataColumns = [{
     field: 'id',
     title: '序号'
@@ -58,6 +40,9 @@ var dataColumns = [{
                 + '<a class="btn btn-xs btn-danger" onclick="delPermission(' + "'" + id + "'" + ')"><i class="fa fa-remove"></i>删除</a>';
     }
 }];
+$(function () {
+    tableInit();
+})
 function dataQueryParams(params) {
 	console.log(params)
 	return {
@@ -106,5 +91,3 @@ function editPermission(permId,type){
     });
 }
 </script>
-#end
-#extends("/common/framework.html")

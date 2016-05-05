@@ -13,19 +13,13 @@ public class PjaxInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-        LOGGER.debug(String.format("interceptor: uri=%s",
-                request.getRequestURI()));
-        String requestURI = request.getRequestURI();
-        //js.css.png.json
-        if(requestURI.contains(".png") || requestURI.contains(".ico")
-                || requestURI.contains(".jpg")){
-            return false;
-        }
-        if (request.getHeader("X-PJAX") == null && request.getMethod().equals("GET")) {
+    	System.err.println(request.getHeader("X-PJAX"));
+        LOGGER.debug(String.format("interceptor: uri=%s", request.getRequestURI()));
+        if (request.getHeader("X-PJAX") == null && request.getParameter("pjax") == null) {
             LOGGER.debug(String.format("interceptor: redirect=%s", request.getContextPath()));
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect("/");
             return false;
         }
-        return super.preHandle(request, response, handler);
+        return true;
     }
 }

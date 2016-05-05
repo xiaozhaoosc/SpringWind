@@ -4,8 +4,7 @@
     </div>
 </div>
 <script type="text/javascript">
-
-    var dataUrl = "#springUrl('/perm/user/getUserList.html')";
+    var dataUrl = "#springUrl('/perm/user/getUserList.html?pjax=true')";
     var dataColumns = [{
         field: 'id',
         title: '序号'
@@ -48,7 +47,7 @@
     })
 
     function dataQueryParams(params) {
-        alert(params);
+        //alert(params);
         return {
             _size: params.limit,  //页面大小
             _index: params.offset, //页码
