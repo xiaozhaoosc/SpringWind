@@ -1,39 +1,28 @@
 #override("title")
-用户管理
+SpringWind - 用户管理
 #end
-#override("body")
-<body class="gray-bg">
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-4">
-        <h2>标题</h2>
-        <ol class="breadcrumb">
-            <li>
-                <a href="index-2.html">权限管理</a>
-            </li>
-            <li>
-                <strong>用户管理</strong>
-            </li>
-        </ol>
-    </div>
-    <div class="col-sm-8">
-        <div class="title-action">
-            <a href="empty_page.html" class="btn btn-primary">活动区域</a>
-        </div>
+#override("css")
+<link href="#springUrl('/static/css/plugins/bootstrap-table/bootstrap-table.min.css')" rel="stylesheet">
+#end
+#override("breadcrumb")
+<li><a>权限管理</a></li><li class="active"><strong>用户管理</strong></li>
+#end
+#override("content")
+<div class="row">
+    <div class="col-sm-12">
+        <table id="dataTable"></table>
     </div>
 </div>
-
-<div class="wrapper wrapper-content">
-    <div class="row">
-        <div class="col-sm-12">
-            <table id="dataTable"></table>
-        </div>
-    </div>
-</div>
-</body>
 #end
 #override("js")
+<script src="#springUrl('/static/js/plugins/bootstrap-table/bootstrap-table.min.js')"></script>
+<script src="#springUrl('/static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js')"></script>
+<script src="#springUrl('/static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js')"></script>
+<script src="#springUrl('/static/plugins/layer-v2.2/layer/layer.js')"></script>
+<script src="#springUrl('/static/js/base_list.js')"></script>
+<script src="#springUrl('/static/js/common.js')"></script>
 <script type="text/javascript">
-    var dataUrl = "#springUrl('/user/getUserList.html')";
+    var dataUrl = "#springUrl('/perm/user/getUserList.html')";
     var dataColumns = [{
         field: 'id',
         title: '序号'
@@ -62,12 +51,15 @@
             return formatDate(row.lastTime);
         }
     }, {
-        title: '#',
+        title: '操作',
         formatter: function (value, row, index) {
             var id = row.id;
-            return '<a class="btn btn-xs btn-info" href="#springUrl('/user/addUser.html')"><i class="fa fa-pencil"></i>新增</a> '
+            return '<a class="btn btn-xs btn-primary" onclick="editUser(' + "'" + id + "'" + ')"><i class="fa fa-pencil"></i>新增</a> '
                     +'<a class="btn btn-xs btn-info" onclick="editUser(' + "'" + id + "'" + ')"><i class="fa fa-pencil"></i>编辑</a> '
-                    + '<a class="btn btn-xs btn-info" onclick="delUser(' + "'" + id + "'" + ')"><i class="fa fa-remove"></i>删除</a>';
+                    <!-- 此处按钮级别权限控制，目前只有 admin 拥有该权限！ -->
+                    #if($SSOPermission.isActionable("10010"))
+                    + '<a class="btn btn-xs btn-danger" onclick="delUser(' + "'" + id + "'" + ')"><i class="fa fa-remove"></i>删除</a>'
+                    #end;
         }
     }
     ];
@@ -79,14 +71,13 @@
     }
 
     function delUser(userId) {
-        console.info(userId);
         //询问框
         layer.confirm('确定删除吗？', {
             btn: ['确定', '取消'] //按钮
         }, function () {
             $.ajax({
                 type: "POST",
-                url: "#springUrl('/user/delUser/')" + userId,
+                url: "#springUrl('/perm/user/delUser/')" + userId,
                 datatype: "text",
                 success: function (data) {
                     if(data == 'true'){
@@ -116,10 +107,9 @@
             area: ['540px', '600px'],
             fix: false, //不固定
             maxmin: true,
-            //content: "http://www.baidu.com" //iframe的url
-            content: "#springUrl('/user/addUser/1')" //iframe的url
+            content: "#springUrl('/perm/user/addUser/1')" //iframe的url
         });
     }
 </script>
 #end
-#extends("/common/base_list.html")
+#extends("/common/framework.html")

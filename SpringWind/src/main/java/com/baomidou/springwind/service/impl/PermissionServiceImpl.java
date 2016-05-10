@@ -28,6 +28,7 @@ import com.baomidou.springwind.service.support.BaseServiceImpl;
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission>
 		implements IPermissionService, SSOAuthorization {
 
+	@Cacheable(value = "permissionCache", key = "#userId")
 	@Override
 	public List<MenuVO> selectMenuVOByUserId(Long userId) {
 		List<MenuVO> perList = baseMapper.selectMenuByUserId(userId, 0L);
@@ -44,8 +45,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 
 	@Override
 	public boolean isPermitted(Token token, String permission) {
-		/*
-		 * 权限验证
+		/**
+		 * 
+		 * 菜单级别、权限验证，生产环境建议加上缓存处理。
 		 * 
 		 */
 		if (StringUtils.isNotBlank(permission)) {
@@ -61,10 +63,26 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 		return false;
 	}
 
-	@Override
 	@Cacheable(value = "permissionCache", key = "#userId")
+	@Override
 	public List<Permission> selectAllByUserId(Long userId) {
 		return baseMapper.selectAllByUserId(userId);
+	}
+
+	@Override
+	public boolean isActionable( Token token, String permission ) {
+		/**
+		 * 
+		 * 按钮级别、权限验证，生产环境建议加上缓存处理。
+		 * <br>
+		 * 演示  admin 返回 true
+		 * 
+		 */
+		System.err.println(" isActionable =" + permission);
+		if ( token.getId() == 1L ) {
+			return true;
+		}
+		return false;
 	}
 
 }
