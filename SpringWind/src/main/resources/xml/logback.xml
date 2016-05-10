@@ -10,10 +10,10 @@
 	</appender>
 	<!-- Output to File -->
 	<appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>/home/logs/springwind.log</File>
+		<File>/tomcat/IDEA/apache-tomcat-7.0.68/logs/springwind.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<FileNamePattern>
-				/home/logs/springwind.%d{yyyy-MM-dd}.log
+				/tomcat/IDEA/apache-tomcat-7.0.68/logs/springwind.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 			<!-- keep 1 days worth of history -->
 			<MaxHistory>10</MaxHistory>
