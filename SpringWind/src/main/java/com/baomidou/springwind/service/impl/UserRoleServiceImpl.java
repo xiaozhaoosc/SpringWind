@@ -2,8 +2,8 @@ package com.baomidou.springwind.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.baomidou.springwind.mapper.UserRoleMapper;
 import com.baomidou.springwind.entity.UserRole;
+import com.baomidou.springwind.mapper.UserRoleMapper;
 import com.baomidou.springwind.service.IUserRoleService;
 import com.baomidou.springwind.service.support.BaseServiceImpl;
 
@@ -15,5 +15,12 @@ import com.baomidou.springwind.service.support.BaseServiceImpl;
 @Service
 public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
 
+	@Override
+	public boolean existRoleUser( Long roleId ) {
+		UserRole ur = new UserRole();
+		ur.setRid(roleId);
+		int rlt = baseMapper.selectCount(ur);
+		return rlt >= 1;
+	}
 
 }

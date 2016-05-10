@@ -2,8 +2,8 @@ package com.baomidou.springwind.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.baomidou.springwind.mapper.RolePermissionMapper;
 import com.baomidou.springwind.entity.RolePermission;
+import com.baomidou.springwind.mapper.RolePermissionMapper;
 import com.baomidou.springwind.service.IRolePermissionService;
 import com.baomidou.springwind.service.support.BaseServiceImpl;
 
@@ -13,7 +13,15 @@ import com.baomidou.springwind.service.support.BaseServiceImpl;
  *
  */
 @Service
-public class RolePermissionServiceImpl extends BaseServiceImpl<RolePermissionMapper, RolePermission> implements IRolePermissionService {
+public class RolePermissionServiceImpl extends BaseServiceImpl<RolePermissionMapper, RolePermission>
+		implements IRolePermissionService {
 
+	@Override
+	public boolean existRolePermission(Long permissionId) {
+		RolePermission rp = new RolePermission();
+		rp.setPid(permissionId);
+		int rlt = baseMapper.selectCount(rp);
+		return rlt >= 1;
+	}
 
 }

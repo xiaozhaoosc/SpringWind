@@ -5,37 +5,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.baomidou.kisso.annotation.Action;
-import com.baomidou.kisso.annotation.Login;
 import com.baomidou.kisso.annotation.Permission;
 
 /**
  * <p>
- * 首页
+ * 监控
  * </p>
  * 
  * @author hubin
- * @Date 2016-04-13
+ * @Date 2016-04-21
  */
 @Controller
-public class IndexController extends BaseController {
+@RequestMapping("/monitor")
+public class MonitorController extends BaseController {
 
 	/**
-	 * 首页
+	 * 实时监控
 	 */
 	@Permission(action = Action.Skip)
-	@RequestMapping("/index")
-	public String index(Model model) {
-		return "/index";
+	@RequestMapping("/realTime")
+	public String realTime(Model model) {
+		
+		return "/monitor/realTime";
 	}
 
-	/**
-	 * 主页
-	 */
-	@Login(action = Action.Skip)
-	@Permission(action = Action.Skip)
-	@RequestMapping("/home")
-	public String home(Model model) {
-
-		return "/home";
-	}
 }
