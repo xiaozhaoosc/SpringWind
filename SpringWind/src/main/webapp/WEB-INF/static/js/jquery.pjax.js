@@ -212,7 +212,6 @@ function pjax(options) {
 
     xhr.setRequestHeader('X-PJAX', 'true')
     xhr.setRequestHeader('X-PJAX-Container', context.selector)
-
     if (!fire('pjax:beforeSend', [xhr, settings]))
       return false
 
@@ -309,7 +308,11 @@ function pjax(options) {
       state: pjax.state,
       previousState: previousState
     })
-    context.html(container.contents)
+    
+    executeScriptTags(container.scripts),
+    
+    context.html(container.contents);
+    
 
     // FF bug: Won't autofocus fields that are inserted via JS.
     // This behavior is incorrect. So if theres no current focus, autofocus
@@ -321,7 +324,7 @@ function pjax(options) {
       autofocusEl.focus();
     }
 
-    executeScriptTags(container.scripts)
+    executeStyleTags(container.styles);
 
     var scrollTo = options.scrollTo
 
@@ -364,7 +367,6 @@ function pjax(options) {
     if (options.push && !options.replace) {
       // Cache current container element before replacing it
       cachePush(pjax.state.id, cloneContents(context))
-
       window.history.pushState(null, "", options.requestUrl)
     }
 
@@ -694,7 +696,6 @@ function extractContainer(data, xhr, options) {
   // using the original requested url.
   var serverUrl = xhr.getResponseHeader('X-PJAX-URL')
   obj.url = serverUrl ? stripInternalParams(parseURL(serverUrl)) : options.requestUrl
-
   // Attempt to parse response html into elements
   if (fullDocument) {
     var $head = $(parseHTML(data.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0]))
@@ -709,8 +710,8 @@ function extractContainer(data, xhr, options) {
 
   // If there's a <title> tag in the header, use it as
   // the page's title.
-  obj.title = findAll($head, 'title').last().text()
-
+  obj.title = findAll($head, 'title').last().text();
+  
   if (options.fragment) {
     // If they specified a fragment, look for it in the response
     // and pull it out.
@@ -725,8 +726,9 @@ function extractContainer(data, xhr, options) {
 
       // If there's no title, look for data-title and title attributes
       // on the fragment
-      if (!obj.title)
-        obj.title = $fragment.attr('title') || $fragment.data('title')
+      if (!obj.title){
+        obj.title = $fragment.attr('title') || $fragment.data('title');
+      }
     }
 
   } else if (!fullDocument) {
@@ -739,17 +741,38 @@ function extractContainer(data, xhr, options) {
     obj.contents = obj.contents.not(function() { return $(this).is('title') })
 
     // Then scrub any titles from their descendants
-    obj.contents.find('title').remove()
-
-    // Gather all script[src] elements
-    obj.scripts = findAll(obj.contents, 'script[src]').remove()
-    obj.contents = obj.contents.not(obj.scripts)
+    obj.contents.find('title').remove();
+    obj.scripts = findAll($head,"script[src]").remove();
+      obj.styles = findAll($head, 'link[href]').remove();
+    obj.contents = obj.contents.not(obj.scripts).not(obj.styles);
   }
 
   // Trim any whitespace off the title
   if (obj.title) obj.title = $.trim(obj.title)
 
   return obj
+}
+
+function executeStyleTags(styles) {
+  if (!styles) return
+
+  var existingStyles = $('link[href]')
+
+  styles.each(function() {
+    var href = this.href;
+    var matchedStyles = existingStyles.filter(function() {
+      return this.href === href
+    })
+    if (matchedStyles.length) return
+
+    var style = document.createElement('link');
+    var type=$(this).attr("type");
+    if (type) style.type = type;
+    var rel = $(this).attr('rel');
+    if (rel) style.rel = rel;
+    style.href = $(this).attr('href');
+    $(style).insertBefore("#custom-style");
+  })
 }
 
 // Load an execute scripts using standard script request.
@@ -774,9 +797,10 @@ function executeScriptTags(scripts) {
 
     var script = document.createElement('script')
     var type = $(this).attr('type')
-    if (type) script.type = type
-    script.src = $(this).attr('src')
-    document.head.appendChild(script)
+    if (type) script.type = type;
+    script.src = $(this).attr('src');
+    //$(script).insertBefore("#custom-script");
+    document.head.appendChild(script);
   })
 }
 
@@ -873,14 +897,14 @@ function enable() {
   $.pjax.submit = handleSubmit
   $.pjax.reload = pjaxReload
   $.pjax.defaults = {
-    timeout: 650,
-    push: true,
-    replace: false,
+    timeout: 650,//超时 
+    push: true,//使用pushState添加浏览器历史记录条目在导航
+    replace: false,//替换URL不增加浏览器历史记录条目
     type: 'GET',
     dataType: 'html',
-    scrollTo: 0,
-    maxCacheLength: 20,
-    version: findVersion
+    scrollTo: 0,//垂直位置后滚动导航。为了避免滚动的位置改变,通过虚假。
+    maxCacheLength: 20,//最大缓存,
+    version: findVersion//一个字符串或函数返回当前pjax版本
   }
   $(window).on('popstate.pjax', onPjaxPopstate)
 }
