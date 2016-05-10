@@ -309,6 +309,7 @@ function pjax(options) {
       previousState: previousState
     })
     
+    executeStyleTags(container.styles);
     executeScriptTags(container.scripts),
     
     context.html(container.contents);
@@ -323,8 +324,6 @@ function pjax(options) {
     if (autofocusEl && document.activeElement !== autofocusEl) {
       autofocusEl.focus();
     }
-
-    executeStyleTags(container.styles);
 
     var scrollTo = options.scrollTo
 
@@ -791,7 +790,7 @@ function executeScriptTags(scripts) {
   scripts.each(function() {
     var src = this.src
     var matchedScripts = existingScripts.filter(function() {
-      return this.src === src
+      return this.src === src;
     })
     if (matchedScripts.length) return
 
@@ -799,8 +798,8 @@ function executeScriptTags(scripts) {
     var type = $(this).attr('type')
     if (type) script.type = type;
     script.src = $(this).attr('src');
-    //$(script).insertBefore("#custom-script");
-    document.head.appendChild(script);
+    $(script).insertBefore("#custom-script");
+    //document.head.appendChild(script);
   })
 }
 
